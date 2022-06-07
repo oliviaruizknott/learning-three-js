@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>My first three.js app</title>
+    <style media="screen">
+      body { margin: 0; }
+      #info {
+        color: #A5F9DB;
+        font-family: monospace;
+        display:block;
+      	position: absolute;
+      	top: 10px;
+        left: 10px;
+      	width: 100%;
+      	z-index: 100;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="info">my first three.js app</div>
+
+    <script src="js/three.js"></script>
+    <script type="module">
+      import WebGL from "./js/WebGL.js"
+
+      // Setup scene, camera, and renderer
+      const scene = new THREE.Scene()
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+      camera.position.set(0, 0, 15)
+      camera.lookAt(0, 0, 0)
+
+      const renderer = new THREE.WebGLRenderer()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      document.body.appendChild(renderer.domElement)
+
+      // rotating cube
+      let material = new THREE.MeshBasicMaterial({ color: "#A5F9DB" })
+      let geometry = new THREE.BoxGeometry(1,1,1)
+      const cube = new THREE.Mesh(geometry, material)
+      scene.add(cube)
+
+      // lines
+      material = new THREE.LineBasicMaterial({ color: "#A5F9DB" })
+      const points = []
+      points.push( new THREE.Vector3(-5, 0, 0))
+      points.push( new THREE.Vector3(0, 5, 0))
+      points.push( new THREE.Vector3(5, 0, 0))
+      geometry = new THREE.BufferGeometry().setFromPoints(points)
+      const line = new THREE.Line(geometry, material)
+      scene.add(line)
+
+      function animate() {
+        requestAnimationFrame(animate)
+
+        // rotate the cube
+        cube.rotation.x += 0.01
+        cube.rotation.y += 0.01
+
+        renderer.render(scene, camera)
+      }
+
+      if (WebGL.isWebGLAvailable()) {
+        animate()
+      } else {
+        const warning = WebGL.getWebGLErrorMessage()
+        document.querySelector('body').prepend(warning)
+      }
+    </script>
+  </body>
+</html>
